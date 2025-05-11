@@ -11,6 +11,7 @@ import { RouteObject } from "react-router-dom";
 import ProtectedLayout from "./assets/layouts/ProtectedLayout";
 import GoogleLoginRedirectPage from "./pages/GoogleLoginRedirectPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 // 1. 홈페이지
 // 2. 로그인 페이지
@@ -50,7 +51,13 @@ const protectedRoutes: RouteObject[] = [
 
 const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3, // 쿼리 요청이 실패했을 때 자동으로 재시도 할 횟수를 지정
+    },
+  },
+});
 
 function App() {
   return (
@@ -58,6 +65,7 @@ function App() {
       <AuthProvider>
         <RouterProvider router={router} />
       </AuthProvider>
+      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );
 }
