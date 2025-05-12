@@ -1,5 +1,20 @@
 .page {
-  margin: 100px;
+  /* margin: 100px; */
+  padding: 120px;
+  width: 100vw;
+}
+
+.mypage {
+  display: flex;
+  flex-direction: column; /* 수직 정렬 */
+  justify-content: center; /* 세로 방향 가운데 */
+  align-items: center; /* 가로 방향 가운데 */
+  text-align: center;
+}
+
+.mypage-title {
+  font-size: 30px;
+  font-weight: bold;
 }
 
 nav {
@@ -28,7 +43,7 @@ nav {
 }
 
 footer {
-  width: 100%;
+  width: 100vw;
   padding: 10px 0;
   display: flex;
   justify-content: center;
@@ -43,23 +58,10 @@ footer {
   color: rgb(60, 60, 60);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
 .grid-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr); /* 기본 5열 고정 */
-  gap: 3px;
+  gap: 10px;
   margin-top: 20px;
 }
 
@@ -81,6 +83,17 @@ footer {
   }
 }
 
+.card-skeleton {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 3px;
+  padding: 0;
+  position: relative;
+  transition: transform 0.3s ease-in-out;
+  background-color: lightgray;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 .card {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -90,7 +103,7 @@ footer {
   position: relative;
   transition: transform 0.3s ease-in-out;
   cursor: pointer;
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card:hover {

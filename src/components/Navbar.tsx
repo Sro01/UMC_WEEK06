@@ -16,7 +16,7 @@ const Navbar = () => {
     if (!accessToken) return;
     const getData = async () => {
       const response: ResponseMyInfoDto = await getMyInfo();
-      console.log(response);
+      // console.log(response);
 
       setData(response.data);
     };
@@ -29,7 +29,7 @@ const Navbar = () => {
     navigate("/");
   };
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <nav>
@@ -43,10 +43,10 @@ const Navbar = () => {
       <div className="space-x-6">
         {!accessToken && (
           <>
-            <Link to={"/login"} className="hover:text-[#807bff]">
+            <Link to={"/login"} className="hover:text-[#abcbe1]">
               LOGIN
             </Link>
-            <Link to={"/signup"} className="hover:text-[#807bff]">
+            <Link to={"/signup"} className="hover:text-[#abcbe1]">
               SIGN UP
             </Link>
           </>
@@ -56,10 +56,10 @@ const Navbar = () => {
             <span style={{ marginRight: "20px" }}>
               {data?.name ? `${data.name}님 환영합니다.` : "환영합니다."}
             </span>
-            <Link to={"/my"} className="hover:text-[#807bff]">
+            <Link to={"/my"} className="hover:text-[#abcbe1]">
               MY
             </Link>
-            <button className="hover:text-[#807bff]" onClick={handleLogout}>
+            <button className="hover:text-[#abcbe1]" onClick={handleLogout}>
               LOGOUT
             </button>
           </>

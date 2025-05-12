@@ -18,7 +18,7 @@ const ProtectedLayout = () => {
   return (
     <div className="flex flex-col">
       <Navbar />
-      <main className="flex-1">
+      <main className="">
         <Outlet />
       </main>
       <Footer />

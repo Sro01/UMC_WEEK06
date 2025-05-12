@@ -1,27 +1,37 @@
-import { useAuth } from "../context/AuthContext";
-import useGetLpList from "../hooks/queries/useGetLpList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PAGINATION_ORDER } from "../enums/common";
-import { FaHeart } from "react-icons/fa";
 import Menu from "../components/Menu";
-import { useNavigate } from "react-router-dom";
+import useGetInfiniteLpList from "../hooks/queries/useGetInfiniteLpList";
+import { useInView } from "react-intersection-observer";
+import LpCard from "../components/LpCard/LpCard";
+import LpCardSkeletonList from "../components/LpCard/LpCardSkeletonList";
 
 const Homepage = () => {
-  const navigate = useNavigate();
-  const { accessToken } = useAuth();
-
-  if (accessToken) {
-    console.log("accessToken", accessToken);
-  }
-
   const [search, setSearch] = useState("");
   const [order, setOrder] = useState<PAGINATION_ORDER>(PAGINATION_ORDER.desc);
-  const { data, isPending, isError } = useGetLpList({ search, order });
-  console.log(data);
+  const {
+    data: lps,
+    isFetching,
+    hasNextPage,
+    isPending,
+    fetchNextPage,
+    isError,
+  } = useGetInfiniteLpList(50, search, order);
 
-  if (isPending) {
-    return <h1>Loading...</h1>;
-  }
+  /**
+   * ref: 특정한 HTML 요소를 감시
+   * inView: 그 요소가 화면에 보이면 true
+   */
+  const { ref, inView } = useInView({
+    threshold: 0, // 화면에 노출되는 정보 (Etnry point 조절)
+  });
+
+  useEffect(() => {
+    if (inView) {
+      !isFetching && hasNextPage && fetchNextPage();
+    }
+  }, [inView, isFetching, hasNextPage, fetchNextPage]);
+
   if (isError) {
     return <h1>Error!</h1>;
   }
@@ -29,19 +39,6 @@ const Homepage = () => {
   // 정렬 순서 변경 핸들러
   const handleOrderChange = (newOrder: PAGINATION_ORDER) => {
     setOrder(newOrder);
-  };
-
-  const handleCardClick = (lpId: number) => {
-    navigate(`/lp/${lpId}`); // /lp/:LPid 경로로 이동
-  };
-
-  const formatDate = (dateString: Date | string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
   };
 
   return (
@@ -54,27 +51,16 @@ const Homepage = () => {
       />
 
       <div className="grid-container">
-        {data?.map((lp) => (
-          <div
-            className="card"
-            key={lp.id}
-            onClick={() => handleCardClick(lp.id)}
-            style={{ cursor: "pointer" }}
-          >
-            <img src={lp.thumbnail} alt={lp.title} className="thumbnail" />
-            <div className="card-overlay">
-              <div className="card-info">
-                <h3 className="card-title">{lp.title}</h3>
-                <p className="card-date">{formatDate(lp.createdAt)}</p>
-                <p className="card-likes">
-                  <FaHeart style={{ marginRight: "4px", color: "white" }} />
-                  {lp.likes?.length || 0}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
+        {isPending && <LpCardSkeletonList count={20} />}
+        {lps?.pages
+          ?.map((page) => page.data.data)
+          ?.flat() // [[1, 2], [3, 4]].flat() => [1, 2, 3, 4]
+          ?.map((lp) => (
+            <LpCard key={lp.id} lp={lp} />
+          ))}
+        {isFetching && <LpCardSkeletonList count={20} />}
       </div>
+      <div ref={ref}></div>
     </div>
   );
 };
