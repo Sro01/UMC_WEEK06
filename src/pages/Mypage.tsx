@@ -30,7 +30,7 @@ const MyPage = () => {
   console.log(data);
   // return <div>{data?.email}</div>;
   return (
-    <div>
+    <div className="page">
       <h1>{data?.name}님 환영합니다.</h1>
       <img src={data?.avatar as string} alt={"구글 로고"} />
       <h1>{data?.email}</h1>
